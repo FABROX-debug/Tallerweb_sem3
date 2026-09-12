@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Asistencia | Auditorio FISI</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+  <main class="tarjeta">
+
+    <header class="cabecera">
+      <p class="etiqueta">FISI &middot; Universidad Nacional Mayor de San Marcos</p>
+      <h1>Registro de asistencia</h1>
+      <p class="subtitulo">Auditorio de la FISI · Semana académica</p>
+    </header>
+
+    <!-- Al enviar, el navegador abre la página de confirmación -->
+    <form action="confirmacion.html" method="get" class="formulario">
+
+      <p class="nota-obligatorio">
+        Los campos marcados con <span class="asterisco" aria-hidden="true">*</span>
+        son obligatorios.
+      </p>
+
+      <!-- ============ DATOS DEL ASISTENTE ============ -->
+      <fieldset class="seccion">
+        <legend>Datos del asistente</legend>
+
+        <div class="grilla">
+
+          <!-- Va primero porque define si se piden los datos académicos -->
+          <fieldset class="grupo ancho-total">
+            <legend class="label">
+              Condición del participante <span class="asterisco" aria-hidden="true">*</span>
+            </legend>
+            <div class="opciones">
+              <label class="opcion">
+                <input type="radio" name="condicion" value="estudiante" required>
+                Estudiante
+              </label>
+              <label class="opcion">
+                <input type="radio" name="condicion" value="docente"> Docente
+              </label>
+              <label class="opcion">
+                <input type="radio" name="condicion" value="egresado"> Egresado
+              </label>
+              <label class="opcion">
+                <input type="radio" name="condicion" value="invitado" id="es-invitado">
+                Invitado externo
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="campo">
+            <label for="nombres">
+              Nombres <span class="asterisco" aria-hidden="true">*</span>
+            </label>
+            <input type="text" id="nombres" name="nombres"
+                   autocomplete="given-name" required>
+          </div>
+
+          <div class="campo">
+            <label for="apellidos">
+              Apellidos <span class="asterisco" aria-hidden="true">*</span>
+            </label>
+            <input type="text" id="apellidos" name="apellidos"
+                   autocomplete="family-name" required>
+          </div>
+
+          <div class="campo">
+            <label for="dni">
+              DNI <span class="asterisco" aria-hidden="true">*</span>
+            </label>
+            <input type="text" id="dni" name="dni"
+                   inputmode="numeric" pattern="[0-9]{8}" maxlength="8"
+                   aria-describedby="ayuda-dni" required>
+            <small class="ayuda" id="ayuda-dni">8 dígitos, sin puntos ni guiones.</small>
+          </div>
+
+          <div class="campo">
+            <label for="correo">
+              Correo electrónico <span class="asterisco" aria-hidden="true">*</span>
+            </label>
+            <input type="email" id="correo" name="correo"
+                   autocomplete="email" aria-describedby="ayuda-correo" required>
+            <small class="ayuda" id="ayuda-correo">
+              Ahí se enviará la constancia de asistencia.
+            </small>
+          </div>
+
+          <div class="campo">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono"
+                   inputmode="tel" pattern="[0-9]{9}" maxlength="9"
+                   autocomplete="tel" aria-describedby="ayuda-telefono">
+            <small class="ayuda" id="ayuda-telefono">9 dígitos.</small>
+          </div>
+
+        </div>
+      </fieldset>
+
+      <!-- ====== DATOS ACADÉMICOS: se ocultan si marca "Invitado externo" ====== -->
+      <fieldset class="seccion seccion-academica">
+        <legend>Datos académicos</legend>
+
+        <div class="grilla">
+
+          <div class="campo">
+            <label for="codigo">Código de alumno</label>
+            <input type="text" id="codigo" name="codigo"
+                   inputmode="numeric" pattern="[0-9]{8}" maxlength="8"
+                   aria-describedby="ayuda-codigo">
+            <small class="ayuda" id="ayuda-codigo">
+              8 dígitos, solo números. Docentes y egresados pueden dejarlo vacío.
+            </small>
+          </div>
+
+          <div class="campo">
+            <label for="escuela">Escuela profesional</label>
+            <select id="escuela" name="escuela">
+              <option value="" selected disabled>Selecciona una opción</option>
+              <option value="software">Ingeniería de Software</option>
+              <option value="sistemas">Ingeniería de Sistemas</option>
+              <option value="otra">Otra facultad</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="ciclo">Ciclo</label>
+            <select id="ciclo" name="ciclo">
+              <option value="" selected disabled>Selecciona una opción</option>
+              <option value="1">I</option>
+              <option value="2">II</option>
+              <option value="3">III</option>
+              <option value="4">IV</option>
+              <option value="5">V</option>
+              <option value="6">VI</option>
+              <option value="7">VII</option>
+              <option value="8">VIII</option>
+              <option value="9">IX</option>
+              <option value="10">X</option>
+            </select>
+          </div>
+
+        </div>
+      </fieldset>
+
+      <!-- ============ SESIONES PROGRAMADAS ============ -->
+      <fieldset class="seccion">
+        <legend>Sesión a la que asistirás</legend>
+
+        <!-- Reemplaza estas sesiones por las reales del evento -->
+        <fieldset class="grupo">
+          <legend class="label">
+            Elige un horario disponible <span class="asterisco" aria-hidden="true">*</span>
+          </legend>
+
+          <div class="dia">
+            <h3 class="dia-titulo">Lunes 14 de setiembre</h3>
+
+            <label class="sesion">
+              <input type="radio" name="sesion" value="lun-09" required>
+              <span class="sesion-texto">
+                <strong>Inteligencia artificial aplicada a la ingeniería</strong>
+                <span class="sesion-hora">09:00 &ndash; 11:00</span>
+              </span>
+              <span class="cupo">24 cupos</span>
+            </label>
+
+            <label class="sesion">
+              <input type="radio" name="sesion" value="lun-15">
+              <span class="sesion-texto">
+                <strong>Taller de metodologías ágiles</strong>
+                <span class="sesion-hora">15:00 &ndash; 17:00</span>
+              </span>
+              <span class="cupo pocos">Últimos 5 cupos</span>
+            </label>
+          </div>
+
+          <div class="dia">
+            <h3 class="dia-titulo">Martes 15 de setiembre</h3>
+
+            <label class="sesion agotada">
+              <input type="radio" name="sesion" value="mar-09" disabled>
+              <span class="sesion-texto">
+                <strong>Seguridad de software y ethical hacking</strong>
+                <span class="sesion-hora">09:00 &ndash; 11:00</span>
+              </span>
+              <span class="cupo agotado">Sin cupo</span>
+            </label>
+
+            <label class="sesion">
+              <input type="radio" name="sesion" value="mar-16">
+              <span class="sesion-texto">
+                <strong>Mesa redonda: egresados en la industria</strong>
+                <span class="sesion-hora">16:00 &ndash; 18:00</span>
+              </span>
+              <span class="cupo">40 cupos</span>
+            </label>
+          </div>
+
+          <div class="dia">
+            <h3 class="dia-titulo">Miércoles 16 de setiembre</h3>
+
+            <label class="sesion">
+              <input type="radio" name="sesion" value="mie-10">
+              <span class="sesion-texto">
+                <strong>Clausura y entrega de certificados</strong>
+                <span class="sesion-hora">10:00 &ndash; 12:00</span>
+              </span>
+              <span class="cupo">18 cupos</span>
+            </label>
+          </div>
+
+        </fieldset>
+
+        <div class="grilla">
+
+          <div class="campo ancho-total">
+            <label for="requerimientos">Requerimientos especiales</label>
+            <textarea id="requerimientos" name="requerimientos" rows="2"
+                      aria-describedby="ayuda-req"></textarea>
+            <small class="ayuda" id="ayuda-req">
+              Opcional. Accesibilidad, intérprete de señas, restricciones alimentarias.
+            </small>
+          </div>
+
+          <div class="campo ancho-total">
+            <label class="opcion">
+              <input type="checkbox" name="certificado" value="si">
+              Deseo recibir el certificado de participación
+            </label>
+            <label class="opcion">
+              <input type="checkbox" name="terminos" value="si" required>
+              Acepto el tratamiento de mis datos personales
+              <span class="asterisco" aria-hidden="true">*</span>
+            </label>
+          </div>
+
+        </div>
+      </fieldset>
+
+      <div class="acciones">
+        <button type="reset" class="boton secundario">Limpiar</button>
+        <button type="submit" class="boton">Registrar asistencia</button>
+      </div>
+
+    </form>
+
+    <footer class="pie">
+      <p>Taller de Software · Semana 3 · Hecho solo con HTML y CSS.</p>
+    </footer>
+
+  </main>
+
+</body>
+</html>

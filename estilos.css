@@ -1,0 +1,457 @@
+/* =========================================================
+   1. VARIABLES DE COLOR  ->  TEMA CLARO (valores por defecto)
+   ========================================================= */
+:root {
+  color-scheme: light dark;        /* avisa al navegador que hay 2 temas */
+
+  --fondo:        #eef1f6;
+  --superficie:   #ffffff;
+  --borde:        #d4d9e2;
+  --texto:        #1c2331;
+  --texto-suave:  #5d6779;
+  --primario:     #7a0f2b;         /* granate San Marcos */
+  --primario-txt: #ffffff;
+  --error:        #b3261e;
+  --exito:        #1a7f4b;
+  --sombra:       0 6px 20px rgba(0, 0, 0, .08);
+}
+
+/* =========================================================
+   2. TEMA OSCURO: solo se REDEFINEN las mismas variables
+   ========================================================= */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo:        #12151c;
+    --superficie:   #1b2029;
+    --borde:        #333b49;
+    --texto:        #e7eaf0;
+    --texto-suave:  #a2abbb;
+    --primario:     #e78ca3;
+    --primario-txt: #1b2029;
+    --error:        #f2857c;
+    --exito:        #6ddaa0;
+    --sombra:       0 6px 20px rgba(0, 0, 0, .45);
+  }
+}
+
+/* =========================================================
+   3. BASE
+   ========================================================= */
+* {
+  box-sizing: border-box;          /* el padding no rompe los anchos */
+}
+
+body {
+  margin: 0;
+  padding: 24px 16px;
+  font-family: "Segoe UI", system-ui, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+/* Tarjeta contenedora: se centra sola y nunca pasa de 800px */
+.tarjeta {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  box-shadow: var(--sombra);
+  padding: 28px;
+}
+
+/* =========================================================
+   4. CABECERA
+   ========================================================= */
+.cabecera {
+  border-bottom: 3px solid var(--primario);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.etiqueta {
+  margin: 0;
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--primario);
+  font-weight: 700;
+}
+
+.cabecera h1 {
+  margin: 6px 0 4px;
+  font-size: 1.7rem;
+}
+
+.subtitulo {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: .95rem;
+}
+
+/* =========================================================
+   5. SECCIONES DEL FORMULARIO
+   ========================================================= */
+
+/* Aviso de campos obligatorios */
+.nota-obligatorio {
+  margin: 0 0 18px;
+  font-size: .85rem;
+  color: var(--texto-suave);
+}
+
+.asterisco {
+  color: var(--error);
+  font-weight: 700;
+}
+
+fieldset {
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  padding: 18px;
+  margin: 0 0 22px;
+}
+
+legend {
+  padding: 0 8px;
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--primario);
+}
+
+/* Numeración automática de las secciones.
+   Si una sección se oculta, las demás se renumeran solas. */
+.formulario {
+  counter-reset: seccion;
+}
+
+.seccion > legend::before {
+  counter-increment: seccion;
+  content: counter(seccion) ". ";
+}
+
+/* ---- REGLA CLAVE: si marcan "Invitado externo",
+   la sección de datos académicos desaparece ---- */
+.formulario:has(#es-invitado:checked) .seccion-academica {
+  display: none;
+}
+
+/* ---- LA CLAVE DEL DISEÑO RESPONSIVO ----
+   auto-fit + minmax: cada campo pide 220px como minimo.
+   Si caben 2 o 3 por fila, se acomodan; si no, bajan solos. */
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;                    /* evita que un campo ancho rompa la grilla */
+}
+
+/* Campos que siempre ocupan la fila completa */
+.ancho-total {
+  grid-column: 1 / -1;
+}
+
+/* Grupo de radios: es un fieldset anidado, se le quita el marco */
+.grupo {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+label,
+.label {
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.grupo legend {
+  padding: 0 0 8px;
+  color: var(--texto-suave);
+  font-size: .88rem;
+  font-weight: 600;
+}
+
+/* =========================================================
+   6. CONTROLES (input, select, textarea)
+   ========================================================= */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font: inherit;                   /* hereda la tipografia del body */
+  color: var(--texto);
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--primario);
+  outline-offset: 1px;
+  border-color: var(--primario);
+}
+
+/* Error: :user-invalid solo se activa DESPUES de que el usuario
+   interactuo con el campo, nunca al cargar la pagina. */
+input:user-invalid,
+select:user-invalid,
+textarea:user-invalid {
+  border-color: var(--error);
+  outline-color: var(--error);
+}
+
+/* Mientras no se elija nada, el texto del select se ve atenuado */
+select:has(option[value=""]:checked) {
+  color: var(--texto-suave);
+}
+
+.ayuda {
+  font-size: .78rem;
+  color: var(--texto-suave);
+}
+
+/* Radios y checkboxes en linea, envueltos en su etiqueta */
+.opciones {
+  display: flex;
+  flex-wrap: wrap;                 /* si no caben, saltan de linea */
+  gap: 10px 20px;
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;                  /* area de toque mas comoda en celular */
+  font-weight: 400;
+  color: var(--texto);
+  cursor: pointer;
+}
+
+.opcion input {
+  accent-color: var(--primario);   /* color del check/radio marcado */
+  width: 17px;
+  height: 17px;
+}
+
+/* =========================================================
+   6b. LISTA DE SESIONES PROGRAMADAS
+   ========================================================= */
+.seccion > .grupo {
+  margin-bottom: 18px;
+}
+
+.dia + .dia {
+  margin-top: 14px;
+}
+
+.dia-titulo {
+  margin: 0 0 8px;
+  font-size: .8rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+/* Cada sesión es una tarjeta clickeable que envuelve su radio */
+.sesion {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;                 /* en celular el cupo baja de línea */
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  font-weight: 400;
+  color: var(--texto);
+  cursor: pointer;
+}
+
+.sesion:hover {
+  border-color: var(--primario);
+}
+
+/* :has() permite pintar la tarjeta cuando su radio está marcado */
+.sesion:has(input:checked) {
+  border-color: var(--primario);
+  box-shadow: inset 0 0 0 1px var(--primario);
+}
+
+.sesion input {
+  accent-color: var(--primario);
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.sesion-texto {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 200px;                 /* ocupa el espacio libre y puede encoger */
+  gap: 2px;
+}
+
+.sesion-hora {
+  font-size: .85rem;
+  color: var(--texto-suave);
+}
+
+/* Etiqueta de disponibilidad */
+.cupo {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--exito);
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+.cupo.pocos  { color: #b06000; }
+.cupo.agotado { color: var(--error); }
+
+/* Sesión llena: el radio ya va deshabilitado en el HTML */
+.sesion.agotada {
+  opacity: .55;
+  cursor: not-allowed;
+  background: var(--fondo);
+}
+
+@media (prefers-color-scheme: dark) {
+  .cupo.pocos { color: #e8b165; }
+}
+
+/* =========================================================
+   7. BOTONES
+   ========================================================= */
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.boton {
+  display: inline-block;
+  padding: 12px 22px;
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;           /* para cuando el botón es un enlace */
+  color: var(--primario-txt);
+  background: var(--primario);
+  border: 1px solid var(--primario);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.boton:hover {
+  opacity: .9;
+}
+
+.secundario {
+  color: var(--texto);
+  background: transparent;
+  border-color: var(--borde);
+}
+
+/* =========================================================
+   7b. PÁGINA DE CONFIRMACIÓN
+   ========================================================= */
+.tarjeta-angosta {
+  max-width: 460px;
+  margin-top: 8vh;
+}
+
+.confirmacion {
+  text-align: center;
+}
+
+/* Círculo con el check, dibujado solo con CSS */
+.marca-exito {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--exito);
+  border: 3px solid var(--exito);
+  border-radius: 50%;
+}
+
+.confirmacion h1 {
+  margin: 0 0 12px;
+  font-size: 1.4rem;
+}
+
+.confirmacion-texto {
+  margin: 0 0 14px;
+  color: var(--texto-suave);
+  font-size: .95rem;
+}
+
+.confirmacion .boton {
+  margin-top: 8px;
+}
+
+/* =========================================================
+   8. PIE
+   ========================================================= */
+.pie {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid var(--borde);
+  text-align: center;
+  font-size: .82rem;
+  color: var(--texto-suave);
+}
+
+/* =========================================================
+   9. AJUSTES PARA PANTALLAS PEQUEÑAS (celular)
+   ========================================================= */
+@media (max-width: 480px) {
+  body {
+    padding: 12px 8px;
+  }
+
+  .tarjeta {
+    padding: 18px 14px;
+    border-radius: 10px;
+  }
+
+  .cabecera h1 {
+    font-size: 1.35rem;
+  }
+
+  /* Botones a todo el ancho, uno debajo del otro */
+  .acciones {
+    flex-direction: column-reverse;
+  }
+
+  .boton {
+    width: 100%;
+  }
+}
