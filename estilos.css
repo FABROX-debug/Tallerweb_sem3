@@ -2,7 +2,7 @@
    1. VARIABLES DE COLOR  ->  TEMA CLARO (valores por defecto)
    ========================================================= */
 :root {
-  color-scheme: light dark;        /* avisa al navegador que hay 2 temas */
+  color-scheme: light;             /* scrollbar y controles en claro */
 
   --fondo:        #eef1f6;
   --superficie:   #ffffff;
@@ -13,25 +13,31 @@
   --primario-txt: #ffffff;
   --error:        #b3261e;
   --exito:        #1a7f4b;
+  --aviso:        #b06000;
   --sombra:       0 6px 20px rgba(0, 0, 0, .08);
 }
 
 /* =========================================================
    2. TEMA OSCURO: solo se REDEFINEN las mismas variables
+
+   Se enciende cuando el checkbox #tema queda marcado.
+   :has() mira hacia adentro: "html que contiene un #tema marcado".
+   Asi un control del formulario repinta la pagina entera SIN JavaScript.
    ========================================================= */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --fondo:        #12151c;
-    --superficie:   #1b2029;
-    --borde:        #333b49;
-    --texto:        #e7eaf0;
-    --texto-suave:  #a2abbb;
-    --primario:     #e78ca3;
-    --primario-txt: #1b2029;
-    --error:        #f2857c;
-    --exito:        #6ddaa0;
-    --sombra:       0 6px 20px rgba(0, 0, 0, .45);
-  }
+html:has(#tema:checked) {
+  color-scheme: dark;
+
+  --fondo:        #12151c;
+  --superficie:   #1b2029;
+  --borde:        #333b49;
+  --texto:        #e7eaf0;
+  --texto-suave:  #a2abbb;
+  --primario:     #e78ca3;
+  --primario-txt: #1b2029;
+  --error:        #f2857c;
+  --exito:        #6ddaa0;
+  --aviso:        #e8b165;
+  --sombra:       0 6px 20px rgba(0, 0, 0, .45);
 }
 
 /* =========================================================
@@ -43,7 +49,8 @@
 
 body {
   margin: 0;
-  padding: 24px 16px;
+  /* El espacio de arriba deja libre la esquina del interruptor de tema */
+  padding: 62px 16px 24px;
   font-family: "Segoe UI", system-ui, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
@@ -60,6 +67,37 @@ body {
   border-radius: 12px;
   box-shadow: var(--sombra);
   padding: 28px;
+}
+
+/* =========================================================
+   3b. INTERRUPTOR DE TEMA (arriba a la derecha, siempre visible)
+   ========================================================= */
+.tema-boton {
+  position: fixed;                 /* se queda fijo aunque se baje la pagina */
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  box-shadow: var(--sombra);
+  cursor: pointer;
+}
+
+.tema-boton input {
+  accent-color: var(--primario);
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
 }
 
 /* =========================================================
@@ -140,10 +178,11 @@ legend {
 
 /* ---- LA CLAVE DEL DISEÑO RESPONSIVO ----
    auto-fit + minmax: cada campo pide 220px como minimo.
-   Si caben 2 o 3 por fila, se acomodan; si no, bajan solos. */
+   Si caben 2 o 3 por fila, se acomodan; si no, bajan solos.
+   min(220px, 100%) evita que se desborde en pantallas muy angostas. */
 .grilla {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
   gap: 16px;
 }
 
@@ -308,6 +347,7 @@ select:has(option[value=""]:checked) {
   display: flex;
   flex-direction: column;
   flex: 1 1 200px;                 /* ocupa el espacio libre y puede encoger */
+  min-width: 0;                    /* un titulo largo no desborda la tarjeta */
   gap: 2px;
 }
 
@@ -327,7 +367,7 @@ select:has(option[value=""]:checked) {
   white-space: nowrap;
 }
 
-.cupo.pocos  { color: #b06000; }
+.cupo.pocos   { color: var(--aviso); }
 .cupo.agotado { color: var(--error); }
 
 /* Sesión llena: el radio ya va deshabilitado en el HTML */
@@ -335,10 +375,6 @@ select:has(option[value=""]:checked) {
   opacity: .55;
   cursor: not-allowed;
   background: var(--fondo);
-}
-
-@media (prefers-color-scheme: dark) {
-  .cupo.pocos { color: #e8b165; }
 }
 
 /* =========================================================
@@ -434,7 +470,7 @@ select:has(option[value=""]:checked) {
    ========================================================= */
 @media (max-width: 480px) {
   body {
-    padding: 12px 8px;
+    padding: 56px 8px 12px;
   }
 
   .tarjeta {
@@ -446,6 +482,19 @@ select:has(option[value=""]:checked) {
     font-size: 1.35rem;
   }
 
+  /* Menos relleno en los marcos: deja mas ancho util a los campos */
+  fieldset {
+    padding: 14px 12px;
+  }
+
+  /* El interruptor se encoge para no tapar nada */
+  .tema-boton {
+    top: 8px;
+    right: 8px;
+    padding: 6px 12px;
+    font-size: .8rem;
+  }
+
   /* Botones a todo el ancho, uno debajo del otro */
   .acciones {
     flex-direction: column-reverse;
@@ -453,5 +502,9 @@ select:has(option[value=""]:checked) {
 
   .boton {
     width: 100%;
+  }
+
+  .tarjeta-angosta {
+    margin-top: 4vh;
   }
 }
